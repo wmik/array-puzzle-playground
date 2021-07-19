@@ -22,29 +22,36 @@ export default function App() {
 }
 
 function Game({ dictionary, shuffler, moves, actions }) {
-  let [, setInternalState] = React.useState('init');
-  let { result, basket, challenge } = useMoveState();
-  let { setChallenge, ...rest } = useMoveDispatch();
+  let [internalState, setInternalState] = React.useState('init');
+  let { result, basket } = useMoveState();
+  let { set, ...dispatcher } = useMoveDispatch();
 
   React.useEffect(() => {
     let [sample] = dictionary;
 
-    setInternalState('loading');
-
-    if (!challenge?.length) {
-      setChallenge(shuffler(sample));
+    if (internalState === 'init') {
+      set({ result: shuffler(sample) });
       setInternalState('ready');
     }
-  }, [dictionary, shuffler, result, setChallenge, challenge]);
+  }, [dictionary, shuffler, set, internalState]);
 
   return (
     <>
       <ResultDisplay value={result.join('')} />
       <BasketDisplay value={basket.join('')} />
-      <For of={actions.map((move) => ({ ...move, onClick: rest[move.name] }))}>
+      <For
+        of={actions.map((action) => ({
+          ...action,
+          onClick: dispatcher[action.name]
+        }))}
+      >
         <Action />
       </For>
-      <For of={moves.map((move) => ({ ...move, onClick: rest[move.name] }))}>
+      <For
+        of={moves
+          .filter((move) => move.label)
+          .map((move) => ({ ...move, onClick: dispatcher[move.name] }))}
+      >
         <Move />
       </For>
     </>

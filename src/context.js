@@ -1,105 +1,32 @@
 import React from 'react';
+import { moves, initialState } from './moves';
 
-let initialState = {
-  result: [],
-  basket: [],
-  history: []
-};
 let MoveStateCtx = React.createContext(initialState);
 let MoveDispatchCtx = React.createContext();
 
-const POP = 'pop';
-const PUSH = 'push';
-const SHIFT = 'shift';
-const UNSHIFT = 'unshift';
-const SET_CHALLENGE = 'set challenge';
-
 function reducer(state, action) {
-  switch (action.type) {
-    case POP: {
-      if (state.result.length) {
-        let result = state.result.slice();
-        return {
-          ...state,
-          basket: state.basket.concat(result.pop()).filter(Boolean),
-          result
-        };
-      }
-      return state;
-    }
-    case PUSH: {
-      if (state.basket.length) {
-        let basket = state.basket.slice();
-        return {
-          ...state,
-          result: state.result.concat(basket.pop()).filter(Boolean),
-          basket
-        };
-      }
+  let move = moves.find((move) => move.name === action.type);
 
-      return state;
-    }
-    case SHIFT: {
-      if (state.result.length) {
-        let result = state.result.slice().reverse();
-        return {
-          ...state,
-          basket: state.basket.concat(result.pop()).filter(Boolean),
-          result
-        };
-      }
-      return state;
-    }
-    case UNSHIFT: {
-      if (state.basket.length) {
-        let basket = state.basket.slice();
-        return {
-          ...state,
-          result: basket.concat(state.result),
-          basket: []
-        };
-      }
-
-      return state;
-    }
-    case SET_CHALLENGE: {
-      return { ...state, ...action.payload };
-    }
-    default:
-      return state;
+  if (typeof move?.handler === 'function') {
+    return move.handler(state, action);
   }
+
+  return state;
 }
 
 export function MoveProvider({ children }) {
   let [state, dispatch] = React.useReducer(reducer, initialState);
 
-  function setChallenge(challenge) {
-    dispatch({
-      type: SET_CHALLENGE,
-      payload: { challenge, result: challenge }
-    });
-  }
-
-  function pop() {
-    dispatch({ type: POP });
-  }
-
-  function push() {
-    dispatch({ type: PUSH });
-  }
-
-  function shift() {
-    dispatch({ type: SHIFT });
-  }
-
-  function unshift() {
-    dispatch({ type: UNSHIFT });
-  }
+  let dispatchers = moves.reduce(
+    (store, move) => ({
+      ...store,
+      [move.name]: (payload) => dispatch({ type: move.name, payload })
+    }),
+    {}
+  );
 
   return (
-    <MoveDispatchCtx.Provider
-      value={{ setChallenge, pop, push, shift, unshift }}
-    >
+    <MoveDispatchCtx.Provider value={dispatchers}>
       <MoveStateCtx.Provider value={state}>{children}</MoveStateCtx.Provider>
     </MoveDispatchCtx.Provider>
   );
