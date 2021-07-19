@@ -61,7 +61,7 @@ function Game({ dictionary, shuffler, moves, actions }) {
 function ResultDisplay({ value }) {
   return (
     <p>
-      <input defaultValue={value} />
+      <input defaultValue={value} disabled />
     </p>
   );
 }
@@ -69,7 +69,7 @@ function ResultDisplay({ value }) {
 function BasketDisplay({ value }) {
   return (
     <p>
-      <input defaultValue={value} />
+      <input defaultValue={value} disabled />
     </p>
   );
 }

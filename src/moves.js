@@ -18,7 +18,7 @@ export const moves = [
   {
     id: 1,
     name: 'pop',
-    label: 'Pop',
+    label: 'Pop ❌',
     description: '',
     handler(state) {
       if (state.result.length) {
@@ -40,7 +40,7 @@ export const moves = [
   {
     id: 2,
     name: 'push',
-    label: 'Push',
+    label: 'Push ➕',
     description: '',
     handler(state) {
       if (state.basket.length) {
@@ -62,7 +62,7 @@ export const moves = [
   {
     id: 3,
     name: 'shift',
-    label: 'Shift',
+    label: '❌ Shift',
     description: '',
     handler(state) {
       if (state.result.length) {
@@ -84,7 +84,7 @@ export const moves = [
   {
     id: 4,
     name: 'unshift',
-    label: 'Unshift',
+    label: '➕ Unshift',
     description: '',
     handler(state) {
       if (state.basket.length) {
