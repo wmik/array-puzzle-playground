@@ -37,8 +37,6 @@ function Game({ dictionary, shuffler, moves, actions }) {
 
   return (
     <>
-      <ResultDisplay value={result.join('')} />
-      <BasketDisplay value={basket.join('')} />
       <For
         of={actions.map((action) => ({
           ...action,
@@ -47,6 +45,8 @@ function Game({ dictionary, shuffler, moves, actions }) {
       >
         <Action />
       </For>
+      <ResultDisplay value={result.join('')} />
+      <BasketDisplay value={basket.join('')} />
       <For
         of={moves
           .filter((move) => move.label)
@@ -59,11 +59,19 @@ function Game({ dictionary, shuffler, moves, actions }) {
 }
 
 function ResultDisplay({ value }) {
-  return <input defaultValue={value} />;
+  return (
+    <p>
+      <input defaultValue={value} />
+    </p>
+  );
 }
 
 function BasketDisplay({ value }) {
-  return <input defaultValue={value} />;
+  return (
+    <p>
+      <input defaultValue={value} />
+    </p>
+  );
 }
 
 function Action({ label }) {
