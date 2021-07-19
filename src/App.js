@@ -75,7 +75,7 @@ function For({ of, children }) {
   let child = React.Children.only(children);
   let elements = of.map((props, idx) =>
     React.cloneElement(child, {
-      key: props.key ?? idx,
+      key: props.id ?? idx,
       ...props
     })
   );
