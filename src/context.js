@@ -10,6 +10,8 @@ let MoveDispatchCtx = React.createContext();
 
 const POP = 'pop';
 const PUSH = 'push';
+const SHIFT = 'shift';
+const UNSHIFT = 'unshift';
 const SET_CHALLENGE = 'set challenge';
 
 function reducer(state, action) {
@@ -32,6 +34,29 @@ function reducer(state, action) {
           ...state,
           result: state.result.concat(basket.pop()).filter(Boolean),
           basket
+        };
+      }
+
+      return state;
+    }
+    case SHIFT: {
+      if (state.result.length) {
+        let result = state.result.slice().reverse();
+        return {
+          ...state,
+          basket: state.basket.concat(result.pop()).filter(Boolean),
+          result
+        };
+      }
+      return state;
+    }
+    case UNSHIFT: {
+      if (state.basket.length) {
+        let basket = state.basket.slice();
+        return {
+          ...state,
+          result: basket.concat(state.result),
+          basket: []
         };
       }
 
@@ -63,8 +88,18 @@ export function MoveProvider({ children }) {
     dispatch({ type: PUSH });
   }
 
+  function shift() {
+    dispatch({ type: SHIFT });
+  }
+
+  function unshift() {
+    dispatch({ type: UNSHIFT });
+  }
+
   return (
-    <MoveDispatchCtx.Provider value={{ setChallenge, pop, push }}>
+    <MoveDispatchCtx.Provider
+      value={{ setChallenge, pop, push, shift, unshift }}
+    >
       <MoveStateCtx.Provider value={state}>{children}</MoveStateCtx.Provider>
     </MoveDispatchCtx.Provider>
   );
